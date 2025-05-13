@@ -9,11 +9,11 @@ import PricingSection from "@/components/PricingSection";
 import FaqSection from "@/components/FaqSection";
 import CtaSection from "@/components/CtaSection";
 import FooterSection from "@/components/FooterSection";
+import LoginForm from "@/components/Login";
 
 const Index = () => {
   return (
     <div className="min-h-screen flex flex-col">
-      <Navbar />
       <main className="flex-grow">
         <HeroSection />
         <StatsSection />

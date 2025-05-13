@@ -1,38 +1,53 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const location = useLocation();
+  const isHomePage = location.pathname === "/";
+
+  const handleNavClick = (hash: string) => {
+    if (isHomePage) {
+      const el = document.getElementById(hash);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth" });
+      }
+    } else {
+      window.location.href = `/#${hash}`;
+    }
+    setIsMenuOpen(false);
+  };
 
   return (
     <nav className="bg-white shadow-sm sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center">
           <div className="flex-shrink-0 flex items-center">
-            <a href="#" className="flex items-center">
+            <Link to="/" className="flex items-center">
               <span className="text-orange-600 font-extrabold text-xl">ReviewUplift</span>
-            </a>
+            </Link>
           </div>
-          
+
           <div className="hidden md:flex items-center space-x-4">
-            <a href="#features" className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-orange-600">Features</a>
-            <a href="#how-it-works" className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-orange-600">How It Works</a>
-            <a href="#pricing" className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-orange-600">Pricing</a>
-            <a href="#testimonials" className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-orange-600">Testimonials</a>
-            <a href="#faq" className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-orange-600">FAQ</a>
+            <button onClick={() => handleNavClick("features")} className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-orange-600">Features</button>
+            <button onClick={() => handleNavClick("how-it-works")} className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-orange-600">How It Works</button>
+            <button onClick={() => handleNavClick("pricing")} className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-orange-600">Pricing</button>
+            <button onClick={() => handleNavClick("testimonials")} className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-orange-600">Testimonials</button>
+            <button onClick={() => handleNavClick("faq")} className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-orange-600">FAQ</button>
           </div>
-          
+
           <div className="hidden md:flex items-center space-x-4">
-            <Button variant="outline" className="border-orange-600 text-orange-600 hover:text-orange-700 hover:border-orange-700">
-              Login
-            </Button>
+            <Link to="/login">
+              <Button variant="outline" className="border-orange-600 text-orange-600 hover:text-orange-700 hover:border-orange-700">
+                Login
+              </Button>
+            </Link>
             <Button className="bg-orange-600 hover:bg-orange-700">
               Get Started Free
             </Button>
           </div>
-          
+
           <div className="flex md:hidden">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -74,51 +89,21 @@ const Navbar = () => {
           </div>
         </div>
       </div>
-      
+
       <div className={`${isMenuOpen ? 'block' : 'hidden'} md:hidden`}>
         <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-          <a
-            href="#features"
-            className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-orange-600 hover:bg-gray-50"
-            onClick={() => setIsMenuOpen(false)}
-          >
-            Features
-          </a>
-          <a
-            href="#how-it-works"
-            className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-orange-600 hover:bg-gray-50"
-            onClick={() => setIsMenuOpen(false)}
-          >
-            How It Works
-          </a>
-          <a
-            href="#pricing"
-            className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-orange-600 hover:bg-gray-50"
-            onClick={() => setIsMenuOpen(false)}
-          >
-            Pricing
-          </a>
-          <a
-            href="#testimonials"
-            className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-orange-600 hover:bg-gray-50"
-            onClick={() => setIsMenuOpen(false)}
-          >
-            Testimonials
-          </a>
-          <a
-            href="#faq"
-            className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-orange-600 hover:bg-gray-50"
-            onClick={() => setIsMenuOpen(false)}
-          >
-            FAQ
-          </a>
-          <div className="pt-4 flex flex-col space-y-3">
-          <Link to="/login">
-            <Button variant="outline" className="border-orange-600 text-orange-600 w-full hover:text-orange-700 hover:border-orange-700">
-              Login
-            </Button>
-            </ Link>
-            <Button className="bg-orange-600 hover:bg-orange-700 w-full">
+          <button onClick={() => handleNavClick("features")} className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-orange-600 hover:bg-gray-50">Features</button>
+          <button onClick={() => handleNavClick("how-it-works")} className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-orange-600 hover:bg-gray-50">How It Works</button>
+          <button onClick={() => handleNavClick("pricing")} className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-orange-600 hover:bg-gray-50">Pricing</button>
+          <button onClick={() => handleNavClick("testimonials")} className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-orange-600 hover:bg-gray-50">Testimonials</button>
+          <button onClick={() => handleNavClick("faq")} className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-orange-600 hover:bg-gray-50">FAQ</button>
+          <div className="pt-4 border-t border-gray-200 flex flex-col gap-2">
+            <Link to="/login">
+              <Button variant="outline" className="w-full border-orange-600 text-orange-600 hover:text-orange-700 hover:border-orange-700">
+                Login
+              </Button>
+            </Link>
+            <Button className="w-full bg-orange-600 hover:bg-orange-700">
               Get Started Free
             </Button>
           </div>
