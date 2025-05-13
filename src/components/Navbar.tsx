@@ -1,6 +1,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -112,9 +113,11 @@ const Navbar = () => {
             FAQ
           </a>
           <div className="pt-4 flex flex-col space-y-3">
+          <Link to="/login">
             <Button variant="outline" className="border-orange-600 text-orange-600 w-full hover:text-orange-700 hover:border-orange-700">
               Login
             </Button>
+            </ Link>
             <Button className="bg-orange-600 hover:bg-orange-700 w-full">
               Get Started Free
             </Button>
