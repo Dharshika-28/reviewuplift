@@ -195,7 +195,7 @@ export default function CreateUserForm({ isOpen, onClose, onCreateUser }: Create
             <Button type="button" variant="outline" onClick={handleClose} disabled={isSubmitting}>
               Cancel
             </Button>
-            <Button type="submit" disabled={isSubmitting}>
+            <Button type="submit" style={{color:'black'}}  disabled={isSubmitting}>
               {isSubmitting ? "Creating..." : "Create User"}
             </Button>
           </DialogFooter>

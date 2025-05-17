@@ -69,7 +69,7 @@ export default function ReviewReplyModal({ review, onClose, onReply }: ReviewRep
             <Button type="button" variant="outline" onClick={onClose} disabled={isSubmitting}>
               Cancel
             </Button>
-            <Button type="submit" disabled={isSubmitting || !replyText.trim()}>
+            <Button type="submit" style={{color:'black'}}  disabled={isSubmitting || !replyText.trim()}>
               {isSubmitting ? "Sending..." : "Send Reply"}
             </Button>
           </div>

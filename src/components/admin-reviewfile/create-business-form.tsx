@@ -154,7 +154,7 @@ export default function CreateBusinessForm({ isOpen, onClose, onCreateBusiness }
             <Button type="button"variant="outline" onClick={handleClose} disabled={isSubmitting}>
               Cancel
             </Button>
-            <Button type="submit" disabled={isSubmitting}>
+            <Button type="submit" style={{color:'black'}} disabled={isSubmitting}>
               {isSubmitting ? "Creating..." : "Create Business"}
             </Button>
           </DialogFooter>
