@@ -1,15 +1,13 @@
-
-import Navbar from "@/components/Navbar";
-import HeroSection from "@/components/HeroSection";
-import StatsSection from "@/components/StatsSection";
-import FeaturesSection from "@/components/FeaturesSection";
-import HowItWorksSection from "@/components/HowItWorksSection";
-import TestimonialsSection from "@/components/TestimonialsSection";
-import PricingSection from "@/components/PricingSection";
-import FaqSection from "@/components/FaqSection";
+import ContactWidget from "@/components/ContactWidget";
 import CtaSection from "@/components/CtaSection";
+import FaqSection from "@/components/FaqSection";
+import FeaturesSection from "@/components/FeaturesSection";
 import FooterSection from "@/components/FooterSection";
-import LoginForm from "@/components/Login";
+import HeroSection from "@/components/HeroSection";
+import HowItWorksSection from "@/components/HowItWorksSection";
+import PricingSection from "@/components/PricingSection";
+import StatsSection from "@/components/StatsSection";
+import TestimonialsSection from "@/components/TestimonialsSection";
 
 const Index = () => {
   return (
@@ -25,6 +23,9 @@ const Index = () => {
         <CtaSection />
       </main>
       <FooterSection />
+
+      {/* Floating contact widget */}
+      <ContactWidget />
     </div>
   );
 };

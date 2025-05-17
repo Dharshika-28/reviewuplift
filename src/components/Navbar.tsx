@@ -43,9 +43,24 @@ const Navbar = () => {
                 Login
               </Button>
             </Link>
-            <Button className="bg-orange-600 hover:bg-orange-700">
-              Get Started Free
-            </Button>
+            <Link to="/payment">
+              <Button className="bg-orange-600 hover:bg-orange-700">
+                Get Started Free
+              </Button>
+            </Link>
+
+            <Link to="/admin">
+              <Button className="bg-orange-600 hover:bg-orange-700">
+                Admin
+              </Button>
+            </Link>
+            <Link to="/login-review">
+              <Button className="bg-orange-600 hover:bg-orange-700">
+                Admin-review
+              </Button>
+            </Link>
+
+
           </div>
 
           <div className="flex md:hidden">

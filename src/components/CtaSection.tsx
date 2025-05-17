@@ -1,5 +1,6 @@
 
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 const CtaSection = () => {
   return (
@@ -14,12 +15,16 @@ const CtaSection = () => {
               Join thousands of businesses that use ReviewUplift to collect more positive reviews and improve their online reputation.
             </p>
             <div className="mt-8 flex flex-wrap gap-4">
-              <Button className="bg-white text-orange-600 hover:bg-gray-100 hover:text-orange-700 px-8 py-6 text-lg">
-                Get Started Free
-              </Button>
-              <Button variant="outline" className="border-white text-gray hover:bg-white hover:text-orange-600 px-8 py-6 text-lg">
-                Schedule Demo
-              </Button>
+              <Link to="/payment">
+                <Button className="bg-white text-orange-600 hover:bg-gray-100 hover:text-orange-700 px-8 py-6 text-lg">
+                  Get Started Free
+                </Button>
+              </Link>
+              <Link to="/demo">
+                <Button variant="outline" className="border-white text-gray hover:bg-white hover:text-orange-600 px-8 py-6 text-lg">
+                  Schedule Demo
+                </Button>
+              </Link>
             </div>
           </div>
           <div className="mt-10 lg:mt-0">

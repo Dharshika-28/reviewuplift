@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 
 const HowItWorksSection = () => {
   const steps = [
@@ -72,9 +73,11 @@ const HowItWorksSection = () => {
                 <p className="text-gray-500 mb-6">
                   Schedule a personalized demo to see how ReviewUplift can help your business collect more reviews and improve your online reputation.
                 </p>
-                <button className="bg-orange-600 hover:bg-orange-700 text-white font-bold py-3 px-6 rounded-md transition duration-300">
-                  Schedule Demo
-                </button>
+                <Link to="/demo">
+                  <button className="bg-orange-600 hover:bg-orange-700 text-white font-bold py-3 px-6 rounded-md transition duration-300">
+                    Schedule Demo
+                  </button>
+                </Link>
               </div>
               <div className="w-full md:w-1/2 mt-8 md:mt-0">
                 <div className="bg-orange-50 p-6 rounded-lg border border-orange-100 relative">

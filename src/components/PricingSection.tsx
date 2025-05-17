@@ -1,28 +1,38 @@
+// src/pages/PricingSection.tsx
 
 import { Button } from "@/components/ui/button";
 import { CheckIcon } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const PricingSection = () => {
+  const navigate = useNavigate();
+
+  const handleContactClick = () => {
+    navigate("/contact");
+  };
+
   const plans = [
     {
       name: "Starter",
       price: "$49",
-      description: "Perfect for small businesses just getting started with review management.",
+      description:
+        "Perfect for small businesses just getting started with review management.",
       features: [
         "1 Business Location",
         "100 Review Requests/Month",
         "Review Monitoring (3 Sites)",
         "Basic Review Widgets",
         "Email Support",
-        "Mobile App Access"
+        "Mobile App Access",
       ],
       cta: "Start Free Trial",
-      popular: false
+      popular: false,
     },
     {
       name: "Professional",
       price: "$99",
-      description: "Ideal for growing businesses that need more advanced features.",
+      description:
+        "Ideal for growing businesses that need more advanced features.",
       features: [
         "3 Business Locations",
         "500 Review Requests/Month",
@@ -31,15 +41,16 @@ const PricingSection = () => {
         "Custom Branding",
         "Priority Email Support",
         "Review Campaigns",
-        "API Access"
+        "API Access",
       ],
       cta: "Start Free Trial",
-      popular: true
+      popular: true,
     },
     {
       name: "Enterprise",
       price: "Custom",
-      description: "For large businesses with multiple locations and advanced needs.",
+      description:
+        "For large businesses with multiple locations and advanced needs.",
       features: [
         "Unlimited Business Locations",
         "Unlimited Review Requests",
@@ -48,18 +59,20 @@ const PricingSection = () => {
         "White-labeled Solution",
         "Dedicated Account Manager",
         "Custom Integration",
-        "Advanced Analytics"
+        "Advanced Analytics",
       ],
       cta: "Contact Sales",
-      popular: false
-    }
+      popular: false,
+    },
   ];
 
   return (
     <section id="pricing" className="py-20 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="lg:text-center">
-          <p className="text-base text-orange-600 font-semibold tracking-wide uppercase">Pricing</p>
+          <p className="text-base text-orange-600 font-semibold tracking-wide uppercase">
+            Pricing
+          </p>
           <h2 className="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
             Simple, transparent pricing
           </h2>
@@ -70,10 +83,10 @@ const PricingSection = () => {
 
         <div className="mt-16 grid gap-8 lg:grid-cols-3">
           {plans.map((plan, index) => (
-            <div 
-              key={index} 
+            <div
+              key={index}
               className={`bg-white rounded-lg shadow-lg overflow-hidden transition-transform duration-300 hover:-translate-y-2 ${
-                plan.popular ? 'ring-2 ring-orange-600 relative' : ''
+                plan.popular ? "ring-2 ring-orange-600 relative" : ""
               }`}
             >
               {plan.popular && (
@@ -88,9 +101,25 @@ const PricingSection = () => {
                   {plan.price !== "Custom" && <span className="text-gray-500 ml-1">/month</span>}
                 </div>
                 <p className="mt-4 text-gray-500">{plan.description}</p>
-                
-                <Button 
-                  className={`mt-8 w-full py-6 ${plan.popular ? 'bg-orange-600 hover:bg-orange-700' : 'bg-orange-600 hover:bg-orange-700'}`}
+
+                <Button
+                  className={`mt-8 w-full py-6 ${
+                    plan.popular
+                      ? "bg-orange-600 hover:bg-orange-700"
+                      : "bg-orange-600 hover:bg-orange-700"
+                  }`}
+                  onClick={() => {
+                    if (plan.cta === "Contact Sales") {
+                      handleContactClick();
+                    } else {
+                      navigate("/payment", {
+                        state: {
+                          planName: plan.name,
+                          price: plan.price,
+                        },
+                      });
+                    }
+                  }}
                 >
                   {plan.cta}
                 </Button>
@@ -114,14 +143,13 @@ const PricingSection = () => {
 
         <div className="mt-16 bg-white rounded-lg shadow-md p-8">
           <div className="text-center">
-            <h3 className="text-2xl font-bold text-gray-900">
-              Need a custom solution?
-            </h3>
+            <h3 className="text-2xl font-bold text-gray-900">Need a custom solution?</h3>
             <p className="mt-4 text-gray-600 max-w-3xl mx-auto">
-              Contact our sales team to get a custom quote for your specific needs. We offer flexible pricing for agencies and multi-location businesses.
+              Contact our sales team to get a custom quote for your specific needs. We offer flexible
+              pricing for agencies and multi-location businesses.
             </p>
             <div className="mt-8">
-              <Button className="bg-orange-600 hover:bg-orange-700">
+              <Button onClick={handleContactClick} className="bg-orange-600 hover:bg-orange-700">
                 Contact Sales
               </Button>
             </div>
