@@ -59,6 +59,11 @@ const Navbar = () => {
                 Admin-review
               </Button>
             </Link>
+            <Link to="/businessform">
+              <Button className="bg-orange-600 hover:bg-orange-700">
+                BF
+              </Button>
+            </Link>
 
 
           </div>

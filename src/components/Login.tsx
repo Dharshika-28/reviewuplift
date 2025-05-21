@@ -6,6 +6,50 @@ import { FcGoogle } from "react-icons/fc";
 
 export default function LoginForm() {
   const [showEmailForm, setShowEmailForm] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+
+    try {
+      const response = await fetch("http://localhost:8080/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Login failed");
+      }
+
+      // Check role - allow only BUSER
+      if (data.role !== "BUSER") {
+        throw new Error("Access denied: only BUSER role allowed");
+      }
+
+      // Store email and role only, no token
+      localStorage.setItem("role", data.role);
+      localStorage.setItem("email", data.email);
+
+      console.log("Login successful", data);
+
+      // Redirect or update UI
+      window.location.href = "/business/dashboard";
+    } catch (err: any) {
+      setError(err.message || "Something went wrong.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-orange-50">
@@ -44,19 +88,35 @@ export default function LoginForm() {
                 <div className="flex-grow border-t border-gray-300" />
               </div>
 
-              <form className="space-y-4">
+              <form className="space-y-4" onSubmit={handleLogin}>
                 <div>
                   <label className="text-sm text-gray-600 block mb-1">Email</label>
-                  <Input type="email" placeholder="you@example.com" required />
+                  <Input
+                    type="email"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
                 </div>
 
                 <div>
                   <label className="text-sm text-gray-600 block mb-1">Password</label>
-                  <Input type="password" placeholder="••••••••" required />
+                  <Input
+                    type="password"
+                    required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
                 </div>
 
-                <Button className="w-full bg-orange-600 hover:bg-orange-700">
-                  Sign In
+                {error && <p className="text-red-500 text-sm text-center">{error}</p>}
+
+                <Button
+                  type="submit"
+                  className="w-full bg-orange-600 hover:bg-orange-700"
+                  disabled={loading}
+                >
+                  {loading ? "Signing In..." : "Sign In"}
                 </Button>
               </form>
             </>

@@ -1,26 +1,63 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 export default function RegistrationForm() {
   const [showEmailForm, setShowEmailForm] = useState(false);
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const navigate = useNavigate(); 
+
+  const handleRegister = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+
+    try {
+      const response = await fetch("http://localhost:8080/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          username,
+          email,
+          password,
+          role: "BUSER", 
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Registration failed");
+      }
+
+      //  Redirect to /businessform after successful registration
+      navigate("/businessform");
+
+    } catch (err: any) {
+      setError(err.message || "Something went wrong");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#f7f8fa]">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-md p-8">
-
         <h2 className="text-2xl font-semibold text-orange-600 text-center mb-6">
           Create your account
         </h2>
 
-        {/* Google Signup */}
         <button className="w-full flex items-center justify-center gap-2 border border-gray-300 rounded-md py-2 hover:bg-gray-100 transition mb-4">
           <FcGoogle size={22} />
           <span className="text-sm text-gray-700">Continue with Google</span>
         </button>
 
-        {/* Email Signup Trigger */}
         {!showEmailForm && (
           <Button
             variant="outline"
@@ -31,7 +68,6 @@ export default function RegistrationForm() {
           </Button>
         )}
 
-        {/* Email Signup Form */}
         {showEmailForm && (
           <>
             <div className="flex items-center my-4">
@@ -40,25 +76,50 @@ export default function RegistrationForm() {
               <hr className="flex-grow border-gray-300" />
             </div>
 
-            <form className="space-y-4">
+            <form className="space-y-4" onSubmit={handleRegister}>
+              <div>
+                <label className="text-sm text-gray-600 block mb-1">Username</label>
+                <Input
+                  type="text"
+                  required
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                />
+              </div>
+
               <div>
                 <label className="text-sm text-gray-600 block mb-1">Email</label>
-                <Input type="email" required />
+                <Input
+                  type="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
               </div>
 
               <div>
                 <label className="text-sm text-gray-600 block mb-1">Password</label>
-                <Input type="password" required />
+                <Input
+                  type="password"
+                  required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
               </div>
 
-              <Button className="w-full bg-orange-600 hover:bg-orange-700">
-                Create Account
+              {error && <p className="text-red-500 text-sm text-center">{error}</p>}
+
+              <Button
+                type="submit"
+                className="w-full bg-orange-600 hover:bg-orange-700"
+                disabled={loading}
+              >
+                {loading ? "Creating..." : "Create Account"}
               </Button>
             </form>
           </>
         )}
 
-        {/* Footer */}
         <p className="text-xs text-gray-500 text-center mt-4">
           By signing up, you agree to our{" "}
           <a href="#" className="text-orange-600 hover:underline">Terms</a> and{" "}

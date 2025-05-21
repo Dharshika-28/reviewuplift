@@ -28,13 +28,16 @@ import UsersPage from "./components/admin-review/users/page";
 
 // Auth Pages
 import LoginPage from "./components/admin-review/login/page";
-import RegisterPage from "./components/admin-reviewfile/sidebar"; // <- Likely wrong import, see note below
+import RegisterPage from "./components/admin-reviewfile/sidebar"; 
 
 // Sidebar (if used globally)
 import Sidebar from "./components/admin-reviewfile/sidebar";
 import AdminReviews from "./components/admin/adminreview";
 import ReviewLinkSettings from "./components/admin/reviewlink";
 import Analytics from "./components/admin/Analytics";
+
+//Business page
+import BusinessForm from "./components/Business-form";
 
 // --- Custom Scroll Hook ---
 function useScrollToHash() {
@@ -72,6 +75,7 @@ function AppRoutes() {
         <Route path="/admin" element={<AdminReviews />} />
         <Route path="/review" element={<ReviewLinkSettings />} />
         <Route path="/analytics" element={<Analytics />} />
+        <Route path="/businessform" element={<BusinessForm />} />
 
         {/* Admin Routes */}
         <Route path="/admin/dashboard" element={<AdminDashboard />} />

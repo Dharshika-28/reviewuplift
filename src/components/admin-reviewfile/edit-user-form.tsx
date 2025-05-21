@@ -180,7 +180,7 @@ export default function EditUserForm({ isOpen, onClose, onUpdateUser, user }: Ed
             <Button type="button" variant="outline" onClick={onClose} disabled={isSubmitting}>
               Cancel
             </Button>
-            <Button type="submit" style={{color:'black'}}  disabled={isSubmitting}>
+            <Button type="submit" style={{backgroundColor:'black'}}  disabled={isSubmitting}>
               {isSubmitting ? "Updating..." : "Update User"}
             </Button>
           </DialogFooter>
