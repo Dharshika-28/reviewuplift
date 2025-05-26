@@ -3,6 +3,9 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { FcGoogle } from "react-icons/fc";
+import { auth, db, signInWithGoogle } from "../firebase/firebase";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
 
 export default function LoginForm() {
   const [showEmailForm, setShowEmailForm] = useState(false);
@@ -11,41 +14,68 @@ export default function LoginForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleEmailLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError("");
 
     try {
-      const response = await fetch("http://localhost:8080/api/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const uid = userCredential.user.uid;
 
-      const data = await response.json();
+      const userRef = doc(db, "users", uid);
+      const userSnap = await getDoc(userRef);
 
-      if (!response.ok) {
-        throw new Error(data.message || "Login failed");
+      if (!userSnap.exists()) {
+        throw new Error("User data not found.");
       }
 
-      // Check role - allow only BUSER
-      if (data.role !== "BUSER") {
+      const userData = userSnap.data();
+
+      if (userData.role !== "BUSER") {
         throw new Error("Access denied: only BUSER role allowed");
       }
 
-      // Store email and role only, no token
-      localStorage.setItem("role", data.role);
-      localStorage.setItem("email", data.email);
+      localStorage.setItem("role", userData.role);
+      localStorage.setItem("email", userData.email);
 
-      console.log("Login successful", data);
+      window.location.href = "/business/dashboard";
 
-      // Redirect or update UI
+    } catch (err: any) {
+      setError(err.message || "Login failed.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    setLoading(true);
+    setError("");
+
+    try {
+      await signInWithGoogle();
+
+      const uid = auth.currentUser?.uid;
+      if (!uid) throw new Error("User not authenticated");
+
+      const userRef = doc(db, "users", uid);
+      const userSnap = await getDoc(userRef);
+
+      if (!userSnap.exists()) {
+        throw new Error("User data not found.");
+      }
+
+      const userData = userSnap.data();
+      if (userData.role !== "BUSER") {
+        throw new Error("Access denied: only BUSER role allowed");
+      }
+
+      localStorage.setItem("role", userData.role);
+      localStorage.setItem("email", userData.email || "");
+
       window.location.href = "/business/dashboard";
     } catch (err: any) {
-      setError(err.message || "Something went wrong.");
+      setError(err.message || "Google sign-in failed");
     } finally {
       setLoading(false);
     }
@@ -59,16 +89,15 @@ export default function LoginForm() {
             Sign In to Your Account
           </h2>
 
-          {/* Google Login */}
           <Button
             variant="outline"
             className="w-full mb-4 flex items-center justify-center gap-2 border-orange-500 text-orange-600 hover:bg-orange-100"
-            // onClick={signInWithGoogle}
+            onClick={handleGoogleLogin}
+            disabled={loading}
           >
             <FcGoogle size={20} /> Continue with Google
           </Button>
 
-          {/* Continue with Email */}
           {!showEmailForm && (
             <Button
               variant="outline"
@@ -79,7 +108,6 @@ export default function LoginForm() {
             </Button>
           )}
 
-          {/* Email Form */}
           {showEmailForm && (
             <>
               <div className="flex items-center my-4">
@@ -88,7 +116,7 @@ export default function LoginForm() {
                 <div className="flex-grow border-t border-gray-300" />
               </div>
 
-              <form className="space-y-4" onSubmit={handleLogin}>
+              <form className="space-y-4" onSubmit={handleEmailLogin}>
                 <div>
                   <label className="text-sm text-gray-600 block mb-1">Email</label>
                   <Input
@@ -122,7 +150,6 @@ export default function LoginForm() {
             </>
           )}
 
-          {/* Footer */}
           <p className="mt-6 text-sm text-center text-gray-600">
             Don’t have an account?{" "}
             <a href="/register" className="text-orange-600 font-medium hover:underline">

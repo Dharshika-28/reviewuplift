@@ -536,10 +536,4 @@ function DetailRow({ label, value }: { label: string; value: string }) {
       </div>
     </div>
   );
-}
-
-
-
-
-
-                
+}              

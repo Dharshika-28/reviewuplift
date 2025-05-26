@@ -3,6 +3,21 @@ import { useNavigate } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { auth, db } from "../firebase/firebase";
+import {
+  createUserWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithPopup,
+} from "firebase/auth";
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  doc,
+  setDoc,
+  serverTimestamp,
+} from "firebase/firestore";
 
 export default function RegistrationForm() {
   const [showEmailForm, setShowEmailForm] = useState(false);
@@ -11,7 +26,19 @@ export default function RegistrationForm() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
+
+  const checkEmailExists = async (email: string) => {
+    const q = query(collection(db, "users"), where("email", "==", email));
+    const snapshot = await getDocs(q);
+    return !snapshot.empty;
+  };
+
+  const checkUsernameExists = async (username: string) => {
+    const q = query(collection(db, "users"), where("username", "==", username));
+    const snapshot = await getDocs(q);
+    return !snapshot.empty;
+  };
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -19,28 +46,60 @@ export default function RegistrationForm() {
     setLoading(true);
 
     try {
-      const response = await fetch("http://localhost:8080/api/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          username,
-          email,
-          password,
-          role: "BUSER", 
-        }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || "Registration failed");
+      const usernameTaken = await checkUsernameExists(username);
+      if (usernameTaken) {
+        throw new Error("Username already exists");
       }
 
-      //  Redirect to /businessform after successful registration
-      navigate("/businessform");
+      const emailTaken = await checkEmailExists(email);
+      if (emailTaken) {
+        throw new Error("Email already registered");
+      }
 
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const uid = userCredential.user.uid;
+
+      await setDoc(doc(db, "users", uid), {
+        uid,
+        username,
+        email,
+        role: "BUSER",
+        createdAt: serverTimestamp(),
+      });
+
+      navigate("/businessform");
     } catch (err: any) {
-      setError(err.message || "Something went wrong");
+      setError(err.message || "Registration failed");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleRegister = async () => {
+    setError("");
+    setLoading(true);
+
+    try {
+      const provider = new GoogleAuthProvider();
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+
+      const emailExists = await checkEmailExists(user.email || "");
+      if (emailExists) {
+        throw new Error("Email already registered");
+      }
+
+      await setDoc(doc(db, "users", user.uid), {
+        uid: user.uid,
+        email: user.email,
+        displayName: user.displayName || "",
+        role: "BUSER",
+        createdAt: serverTimestamp(),
+      });
+
+      navigate("/businessform");
+    } catch (err: any) {
+      setError(err.message || "Google sign-in failed");
     } finally {
       setLoading(false);
     }
@@ -53,10 +112,13 @@ export default function RegistrationForm() {
           Create your account
         </h2>
 
-        <button className="w-full flex items-center justify-center gap-2 border border-gray-300 rounded-md py-2 hover:bg-gray-100 transition mb-4">
-          <FcGoogle size={22} />
-          <span className="text-sm text-gray-700">Continue with Google</span>
-        </button>
+        <Button
+          variant="outline"
+          className="w-full mb-4 flex items-center justify-center gap-2 border-orange-500 text-orange-600 hover:bg-orange-100"
+          onClick={handleGoogleRegister}
+        >
+          <FcGoogle size={20} /> Continue with Google
+        </Button>
 
         {!showEmailForm && (
           <Button
